@@ -72,12 +72,16 @@ const toNum = value =>
   Number(
     String(value ?? '')
       .replace(/[,٬\s]/g, '')
-      .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+      .replace(/[۰-۹]/g, d =>
+        '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)
+      )
   ) || 0;
 
 const money = value => {
   const n = toNum(value);
-  return n ? new Intl.NumberFormat('fa-IR').format(n) : '';
+  return n
+    ? new Intl.NumberFormat('fa-IR').format(n)
+    : '';
 };
 
 const hasKeyword = value =>
@@ -87,14 +91,17 @@ const hasKeyword = value =>
 
 const chunks = (arr, size) =>
   Array.from(
-    { length: Math.ceil(arr.length / size) },
-    (_, i) => arr.slice(i * size, i * size + size)
+    {
+      length: Math.ceil(arr.length / size)
+    },
+    (_, i) =>
+      arr.slice(i * size, i * size + size)
   );
 
 
-/* =====================================================
+/* =========================================================
    تبدیل تاریخ شمسی / میلادی
-   ===================================================== */
+   ========================================================= */
 
 function jalaliToGregorian(jy, jm, jd) {
   let jy2 = jy + 1595;
@@ -155,7 +162,10 @@ function jalaliToGregorian(jy, jm, jd) {
   let gm = 1;
   let day = gd;
 
-  while (day > md[gm - 1] && gm <= 12) {
+  while (
+    day > md[gm - 1] &&
+    gm <= 12
+  ) {
     day -= md[gm - 1];
     gm++;
   }
@@ -167,7 +177,11 @@ function jalaliToGregorian(jy, jm, jd) {
   };
 }
 
-function gregorianToJalali(gy, gm, gd) {
+function gregorianToJalali(
+  gy,
+  gm,
+  gd
+) {
   const gdm = [
     0,
     31,
@@ -183,7 +197,8 @@ function gregorianToJalali(gy, gm, gd) {
     334
   ];
 
-  const gy2 = gm > 2 ? gy + 1 : gy;
+  const gy2 =
+    gm > 2 ? gy + 1 : gy;
 
   let days =
     355666 +
@@ -194,39 +209,56 @@ function gregorianToJalali(gy, gm, gd) {
     gd +
     gdm[gm - 1];
 
-  let jy = -1595 + 33 * Math.floor(days / 12053);
+  let jy =
+    -1595 +
+    33 * Math.floor(days / 12053);
 
   days %= 12053;
 
-  jy += 4 * Math.floor(days / 1461);
+  jy +=
+    4 * Math.floor(days / 1461);
 
   days %= 1461;
 
   if (days > 365) {
-    jy += Math.floor((days - 1) / 365);
-    days = (days - 1) % 365;
+    jy +=
+      Math.floor(
+        (days - 1) / 365
+      );
+
+    days =
+      (days - 1) % 365;
   }
 
   const jm =
     days < 186
-      ? 1 + Math.floor(days / 31)
-      : 7 + Math.floor((days - 186) / 30);
+      ? 1 +
+        Math.floor(
+          days / 31
+        )
+      : 7 +
+        Math.floor(
+          (days - 186) / 30
+        );
 
   const jd =
     1 +
-    (
-      days < 186
-        ? days % 31
-        : (days - 186) % 30
-    );
+    (days < 186
+      ? days % 31
+      : (days - 186) % 30);
 
-  return `${jy}/${String(jm).padStart(2, '0')}/${String(jd).padStart(2, '0')}`;
+  return `${jy}/${String(
+    jm
+  ).padStart(2, '0')}/${String(
+    jd
+  ).padStart(2, '0')}`;
 }
 
 const parseJalali = value => {
-  const m = String(value || '').match(
-    /^(\d{4})\/(\d{1,2})\/(\d{1,2})$/
-  );
+  const m =
+    String(value || '').match(
+      /^(\d{4})\/(\d{1,2})\/(\d{1,2})$/
+    );
 
   return m
     ? {
@@ -241,43 +273,59 @@ const parseJalali = value => {
       };
 };
 
-const monthLength = (y, m) =>
+const monthLength = (
+  y,
+  m
+) =>
   m <= 6
     ? 31
     : m <= 11
-      ? 30
-      : 29;
+    ? 30
+    : 29;
 
 const pad = n =>
   String(n).padStart(2, '0');
 
-const makeDate = (y, m, d) =>
+const makeDate = (
+  y,
+  m,
+  d
+) =>
   `${y}/${pad(m)}/${pad(d)}`;
 
 
-/* =====================================================
+/* =========================================================
    تقویم شمسی
-   ===================================================== */
+   ========================================================= */
 
-function JalaliDate({ value, onChange }) {
-  const [open, setOpen] = useState(false);
+function JalaliDate({
+  value,
+  onChange
+}) {
+  const [open, setOpen] =
+    useState(false);
 
-  const [view, setView] = useState(() => {
-    const p = parseJalali(value);
+  const [view, setView] =
+    useState(() => {
+      const p =
+        parseJalali(value);
 
-    return {
-      y: p.y,
-      m: p.m
-    };
-  });
+      return {
+        y: p.y,
+        m: p.m
+      };
+    });
 
-  const ref = useRef(null);
+  const ref =
+    useRef(null);
 
   useEffect(() => {
     const close = e => {
       if (
         ref.current &&
-        !ref.current.contains(e.target)
+        !ref.current.contains(
+          e.target
+        )
       ) {
         setOpen(false);
       }
@@ -296,7 +344,8 @@ function JalaliDate({ value, onChange }) {
   }, []);
 
   useEffect(() => {
-    const p = parseJalali(value);
+    const p =
+      parseJalali(value);
 
     setView({
       y: p.y,
@@ -304,36 +353,43 @@ function JalaliDate({ value, onChange }) {
     });
   }, [value]);
 
-  const selected = parseJalali(value);
+  const selected =
+    parseJalali(value);
 
-  const first = jalaliToGregorian(
-    view.y,
-    view.m,
-    1
-  );
+  const first =
+    jalaliToGregorian(
+      view.y,
+      view.m,
+      1
+    );
 
-  const firstWeekday = new Date(
-    first.gy,
-    first.gm - 1,
-    first.gd
-  ).getDay();
+  const firstWeekday =
+    new Date(
+      first.gy,
+      first.gm - 1,
+      first.gd
+    ).getDay();
 
   const saturdayIndex =
     (firstWeekday + 1) % 7;
 
-  const days = monthLength(
-    view.y,
-    view.m
-  );
+  const days =
+    monthLength(
+      view.y,
+      view.m
+    );
 
   const cells = Array.from(
     {
-      length: saturdayIndex + days
+      length:
+        saturdayIndex + days
     },
     (_, i) =>
       i < saturdayIndex
         ? null
-        : i - saturdayIndex + 1
+        : i -
+          saturdayIndex +
+          1
   );
 
   const selectDay = d => {
@@ -348,25 +404,28 @@ function JalaliDate({ value, onChange }) {
     setOpen(false);
   };
 
-  const changeMonth = delta => {
-    let m = view.m + delta;
-    let y = view.y;
+  const changeMonth =
+    delta => {
+      let m =
+        view.m + delta;
 
-    if (m > 12) {
-      m = 1;
-      y++;
-    }
+      let y = view.y;
 
-    if (m < 1) {
-      m = 12;
-      y--;
-    }
+      if (m > 12) {
+        m = 1;
+        y++;
+      }
 
-    setView({
-      y,
-      m
-    });
-  };
+      if (m < 1) {
+        m = 12;
+        y--;
+      }
+
+      setView({
+        y,
+        m
+      });
+    };
 
   return (
     <div
@@ -387,7 +446,8 @@ function JalaliDate({ value, onChange }) {
               : ''
           }
         >
-          {value || 'تاریخ شمسی'}
+          {value ||
+            'تاریخ شمسی'}
         </span>
 
         <span className="calendar-icon">
@@ -401,7 +461,6 @@ function JalaliDate({ value, onChange }) {
           dir="rtl"
         >
           <div className="jalali-calendar-head">
-
             <button
               type="button"
               onClick={() =>
@@ -412,7 +471,12 @@ function JalaliDate({ value, onChange }) {
             </button>
 
             <strong>
-              {MONTHS[view.m - 1]} {view.y}
+              {
+                MONTHS[
+                  view.m - 1
+                ]
+              }{' '}
+              {view.y}
             </strong>
 
             <button
@@ -423,39 +487,50 @@ function JalaliDate({ value, onChange }) {
             >
               ›
             </button>
-
           </div>
 
           <div className="jalali-weekdays">
-            {WEEKDAYS.map(day => (
-              <span key={day}>
-                {day}
-              </span>
-            ))}
+            {WEEKDAYS.map(
+              day => (
+                <span
+                  key={day}
+                >
+                  {day}
+                </span>
+              )
+            )}
           </div>
 
           <div className="jalali-days">
-            {cells.map((day, i) =>
-              day ? (
-                <button
-                  key={i}
-                  type="button"
-                  className={
-                    selected.y === view.y &&
-                    selected.m === view.m &&
-                    selected.d === day
-                      ? 'selected'
-                      : ''
-                  }
-                  onClick={() =>
-                    selectDay(day)
-                  }
-                >
-                  {day}
-                </button>
-              ) : (
-                <span key={i} />
-              )
+            {cells.map(
+              (day, i) =>
+                day ? (
+                  <button
+                    key={i}
+                    type="button"
+                    className={
+                      selected.y ===
+                        view.y &&
+                      selected.m ===
+                        view.m &&
+                      selected.d ===
+                        day
+                        ? 'selected'
+                        : ''
+                    }
+                    onClick={() =>
+                      selectDay(
+                        day
+                      )
+                    }
+                  >
+                    {day}
+                  </button>
+                ) : (
+                  <span
+                    key={i}
+                  />
+                )
             )}
           </div>
         </div>
@@ -465,27 +540,40 @@ function JalaliDate({ value, onChange }) {
 }
 
 
-/* =====================================================
-   صفحه ثبت امضا
-   ===================================================== */
+/* =========================================================
+   صفحه امضا
+   ========================================================= */
 
 function SignaturePad({
   value,
   onChange,
-  className = '',
-  label = 'امضا'
+  className = ''
 }) {
-  const canvasRef = useRef(null);
-  const drawingRef = useRef(false);
-  const lastPointRef = useRef(null);
+  const canvasRef =
+    useRef(null);
 
+  const drawingRef =
+    useRef(false);
+
+  const lastPointRef =
+    useRef(null);
+
+
+  /*
+   * Canvas کاملاً شفاف است.
+   * اگر قبلاً امضایی ذخیره شده باشد،
+   * همان امضا دوباره روی Canvas قرار می‌گیرد.
+   */
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas =
+      canvasRef.current;
 
     if (!canvas) return;
 
     const ctx =
-      canvas.getContext('2d');
+      canvas.getContext(
+        '2d'
+      );
 
     ctx.clearRect(
       0,
@@ -494,9 +582,17 @@ function SignaturePad({
       canvas.height
     );
 
+    /*
+     * هیچ رنگ پس‌زمینه‌ای
+     * اینجا قرار نمی‌دهیم.
+     */
+    ctx.globalCompositeOperation =
+      'source-over';
+
     if (!value) return;
 
-    const img = new Image();
+    const img =
+      new Image();
 
     img.onload = () => {
       ctx.clearRect(
@@ -505,6 +601,9 @@ function SignaturePad({
         canvas.width,
         canvas.height
       );
+
+      ctx.globalCompositeOperation =
+        'source-over';
 
       ctx.drawImage(
         img,
@@ -518,6 +617,7 @@ function SignaturePad({
     img.src = value;
   }, [value]);
 
+
   const getPoint = e => {
     const canvas =
       canvasRef.current;
@@ -527,37 +627,47 @@ function SignaturePad({
 
     return {
       x:
-        (e.clientX - rect.left) *
-        (canvas.width / rect.width),
+        (e.clientX -
+          rect.left) *
+        (canvas.width /
+          rect.width),
 
       y:
-        (e.clientY - rect.top) *
-        (canvas.height / rect.height)
+        (e.clientY -
+          rect.top) *
+        (canvas.height /
+          rect.height)
     };
   };
 
-  const startDrawing = e => {
-    e.preventDefault();
 
-    const canvas =
-      canvasRef.current;
+  const startDrawing =
+    e => {
+      e.preventDefault();
 
-    if (!canvas) return;
+      const canvas =
+        canvasRef.current;
 
-    try {
-      canvas.setPointerCapture(
-        e.pointerId
-      );
-    } catch {}
+      if (!canvas) return;
 
-    drawingRef.current = true;
+      try {
+        canvas.setPointerCapture(
+          e.pointerId
+        );
+      } catch {}
 
-    lastPointRef.current =
-      getPoint(e);
-  };
+      drawingRef.current =
+        true;
+
+      lastPointRef.current =
+        getPoint(e);
+    };
+
 
   const draw = e => {
-    if (!drawingRef.current)
+    if (
+      !drawingRef.current
+    )
       return;
 
     e.preventDefault();
@@ -566,7 +676,9 @@ function SignaturePad({
       canvasRef.current;
 
     const ctx =
-      canvas.getContext('2d');
+      canvas.getContext(
+        '2d'
+      );
 
     const point =
       getPoint(e);
@@ -598,53 +710,75 @@ function SignaturePad({
     ctx.lineJoin = 'round';
     ctx.strokeStyle = '#000';
 
+    /*
+     * فقط خود خط امضا
+     * روی Canvas نوشته می‌شود.
+     * هیچ Background وجود ندارد.
+     */
     ctx.stroke();
 
     lastPointRef.current =
       point;
   };
 
-  const stopDrawing = e => {
-    if (!drawingRef.current)
-      return;
 
-    e.preventDefault();
-
-    drawingRef.current = false;
-    lastPointRef.current = null;
-
-    const canvas =
-      canvasRef.current;
-
-    if (!canvas) return;
-
-    onChange(
-      canvas.toDataURL(
-        'image/png'
+  const stopDrawing =
+    e => {
+      if (
+        !drawingRef.current
       )
-    );
-  };
+        return;
 
-  const clearSignature = e => {
-    e.stopPropagation();
+      e.preventDefault();
 
-    const canvas =
-      canvasRef.current;
+      drawingRef.current =
+        false;
 
-    if (!canvas) return;
+      lastPointRef.current =
+        null;
 
-    const ctx =
-      canvas.getContext('2d');
+      const canvas =
+        canvasRef.current;
 
-    ctx.clearRect(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
+      if (!canvas) return;
 
-    onChange('');
-  };
+      /*
+       * خروجی PNG دارای
+       * پس‌زمینه شفاف است.
+       */
+      const signature =
+        canvas.toDataURL(
+          'image/png'
+        );
+
+      onChange(signature);
+    };
+
+
+  const clearSignature =
+    e => {
+      e.stopPropagation();
+
+      const canvas =
+        canvasRef.current;
+
+      if (!canvas) return;
+
+      const ctx =
+        canvas.getContext(
+          '2d'
+        );
+
+      ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+      );
+
+      onChange('');
+    };
+
 
   return (
     <div
@@ -652,38 +786,19 @@ function SignaturePad({
     >
       <canvas
         ref={canvasRef}
-        width={600}
-        height={180}
+        width={500}
+        height={150}
         className="signature-pad"
         onPointerDown={
           startDrawing
         }
-        onPointerMove={
-          draw
-        }
+        onPointerMove={draw}
         onPointerUp={
           stopDrawing
         }
         onPointerCancel={
           stopDrawing
         }
-        onPointerLeave={() => {
-          if (drawingRef.current) {
-            drawingRef.current = false;
-            lastPointRef.current = null;
-
-            const canvas =
-              canvasRef.current;
-
-            if (canvas) {
-              onChange(
-                canvas.toDataURL(
-                  'image/png'
-                )
-              );
-            }
-          }
-        }}
       />
 
       <button
@@ -693,39 +808,18 @@ function SignaturePad({
           clearSignature
         }
       >
-        پاک کردن
+        پاک کردن امضا
       </button>
     </div>
   );
 }
 
 
-/* =====================================================
-   نمایش امضا در فرم
-   ===================================================== */
-
-function SignatureImage({
-  value,
-  className = ''
-}) {
-  if (!value) return null;
-
-  return (
-    <img
-      src={value}
-      alt="امضا"
-      className={`signature-image ${className}`}
-    />
-  );
-}
-
-
-/* =====================================================
+/* =========================================================
    برنامه اصلی
-   ===================================================== */
+   ========================================================= */
 
 function App() {
-
   const [header, setHeader] =
     useState({
       title:
@@ -777,7 +871,14 @@ function App() {
 
 
   /*
-   * هر سه امضا به صورت تصویر ذخیره می‌شوند.
+   * requester:
+   * امضای تنظیم کننده
+   *
+   * confirmer:
+   * نام/امضای تایید کننده
+   *
+   * issuer:
+   * نام/امضای تصویب کننده
    */
   const [sig, setSig] =
     useState({
@@ -794,10 +895,6 @@ function App() {
     useState(false);
 
 
-  /* =====================================================
-     جمع کل
-     ===================================================== */
-
   const total = useMemo(
     () =>
       rows.reduce(
@@ -810,10 +907,10 @@ function App() {
   );
 
 
-  /* =====================================================
-     انتقال خودکار هزینه‌های بدون فاکتور
-     ===================================================== */
-
+  /*
+   * انتقال خودکار هزینه‌های
+   * بدون فاکتور
+   */
   const niItems = useMemo(
     () =>
       rows
@@ -822,7 +919,8 @@ function App() {
             hasKeyword(
               row.description
             ) &&
-            toNum(row.amount) > 0
+            toNum(row.amount) >
+              0
         )
         .map(row => ({
           product:
@@ -833,8 +931,7 @@ function App() {
           provider:
             row.place || '',
 
-          qty:
-            '1',
+          qty: '1',
 
           unit:
             row.amount,
@@ -850,19 +947,16 @@ function App() {
   );
 
 
-  const niPages = useMemo(
-    () =>
-      chunks(
-        niItems,
-        3
-      ),
-    [niItems]
-  );
+  const niPages =
+    useMemo(
+      () =>
+        chunks(
+          niItems,
+          3
+        ),
+      [niItems]
+    );
 
-
-  /* =====================================================
-     تغییر ردیف
-     ===================================================== */
 
   const updateRow = (
     index,
@@ -883,13 +977,8 @@ function App() {
   };
 
 
-  /* =====================================================
-     تغییر تاریخ اصلی
-     ===================================================== */
-
   const updateMainDate =
     value => {
-
       setHeader(h => ({
         ...h,
         date: value
@@ -909,65 +998,26 @@ function App() {
     };
 
 
-  /* =====================================================
+  /* =========================================================
      ساخت PDF
-     ===================================================== */
+     ========================================================= */
 
   const makePdf = async (
     node,
     filename,
     orientation = 'landscape'
   ) => {
-
     if (!node) return;
-
-    /*
-     * کمی فرصت برای تکمیل رندر تصاویر امضا
-     */
-    await new Promise(
-      resolve =>
-        requestAnimationFrame(
-          () =>
-            requestAnimationFrame(
-              resolve
-            )
-        )
-    );
-
-    const images =
-      Array.from(
-        node.querySelectorAll(
-          'img'
-        )
-      );
-
-    await Promise.all(
-      images.map(
-        img =>
-          img.complete
-            ? Promise.resolve()
-            : new Promise(
-                resolve => {
-                  img.onload =
-                    resolve;
-                  img.onerror =
-                    resolve;
-                }
-              )
-      )
-    );
 
     const canvas =
       await html2canvas(
         node,
         {
-          scale: 3,
-          backgroundColor:
-            '#fff',
+          scale: 2.5,
+          backgroundColor: '#fff',
           useCORS: true,
           allowTaint: false,
-          logging: false,
-          imageTimeout: 0
+          logging: false
         }
       );
 
@@ -1030,17 +1080,11 @@ function App() {
   };
 
 
-  /* =====================================================
-     PDF فرم اصلی
-     ===================================================== */
-
   const exportMain =
     async () => {
-
       setBusy(true);
 
       try {
-
         await makePdf(
           document.getElementById(
             'main-paper'
@@ -1051,27 +1095,20 @@ function App() {
           }.pdf`,
           'landscape'
         );
-
       } finally {
         setBusy(false);
       }
     };
 
 
-  /* =====================================================
-     PDF فرم بدون فاکتور
-     ===================================================== */
-
   const exportNoInvoice =
     async () => {
-
       if (!niPages.length)
         return;
 
       setNiBusy(true);
 
       try {
-
         let pdf = null;
 
         for (
@@ -1079,7 +1116,6 @@ function App() {
           i < niPages.length;
           i++
         ) {
-
           const node =
             document.getElementById(
               `ni-${i}`
@@ -1088,55 +1124,20 @@ function App() {
           if (!node)
             continue;
 
-          await new Promise(
-            resolve =>
-              requestAnimationFrame(
-                () =>
-                  requestAnimationFrame(
-                    resolve
-                  )
-              )
-          );
-
-          const images =
-            Array.from(
-              node.querySelectorAll(
-                'img'
-              )
-            );
-
-          await Promise.all(
-            images.map(
-              img =>
-                img.complete
-                  ? Promise.resolve()
-                  : new Promise(
-                      resolve => {
-                        img.onload =
-                          resolve;
-                        img.onerror =
-                          resolve;
-                      }
-                    )
-            )
-          );
-
           const canvas =
             await html2canvas(
               node,
               {
-                scale: 3,
+                scale: 2.5,
                 backgroundColor:
                   '#fff',
                 useCORS: true,
                 allowTaint: false,
-                logging: false,
-                imageTimeout: 0
+                logging: false
               }
             );
 
           if (!pdf) {
-
             pdf =
               new jsPDF({
                 orientation:
@@ -1145,9 +1146,7 @@ function App() {
                 format: 'a4',
                 compress: true
               });
-
           } else {
-
             pdf.addPage(
               'a4',
               'portrait'
@@ -1187,7 +1186,6 @@ function App() {
         }
 
         if (pdf) {
-
           pdf.save(
             `فرم-بدون-فاکتور-${
               header.date ||
@@ -1195,19 +1193,17 @@ function App() {
             }.pdf`
           );
         }
-
       } finally {
         setNiBusy(false);
       }
     };
 
 
-  /* =====================================================
-     پاک کردن
-     ===================================================== */
+  /* =========================================================
+     پاک کردن فرم
+     ========================================================= */
 
   const reset = () => {
-
     setRows(
       Array.from(
         { length: 8 },
@@ -1242,15 +1238,14 @@ function App() {
   };
 
 
-  /* =====================================================
+  /* =========================================================
      فرم بدون فاکتور
-     ===================================================== */
+     ========================================================= */
 
   const NoInvoice = ({
     items,
     index
   }) => {
-
     const sum =
       items.reduce(
         (s, item) =>
@@ -1264,20 +1259,15 @@ function App() {
         id={`ni-${index}`}
         className="paper no-invoice-paper"
       >
-
         <div className="ni-frame">
-
-          {/* سربرگ */}
 
           <div className="ni-top">
 
             <div className="ni-logo">
-
               <img
                 src={LOGO_SRC}
                 alt="فاران"
               />
-
             </div>
 
             <div className="ni-title">
@@ -1305,23 +1295,16 @@ function App() {
           </div>
 
 
-          {/* اطلاعات */}
-
           <div className="ni-info">
 
             <div>
-              <b>
-                تاریخ :
-              </b>
-
+              <b>تاریخ :</b>
               <span>
                 {ni.date}
               </span>
             </div>
 
-
             <div>
-
               <b>
                 نام و نام خانوادگی درخواست کننده :
               </b>
@@ -1330,43 +1313,29 @@ function App() {
                 {ni.requester ||
                   '................................'}
               </span>
-
             </div>
 
-
             <div>
-
-              <b>
-                سمت :
-              </b>
+              <b>سمت :</b>
 
               <span>
                 {ni.position ||
                   '........................'}
               </span>
-
             </div>
 
-
             <div>
-
-              <b>
-                واحد سازمانی :
-              </b>
+              <b>واحد سازمانی :</b>
 
               <span>
                 {ni.organization ||
                   '........................'}
               </span>
-
             </div>
-
 
             <div className="wide">
 
-              <b>
-                شرح :
-              </b>
+              <b>شرح :</b>
 
               <span>
                 {ni.reason ||
@@ -1378,17 +1347,11 @@ function App() {
           </div>
 
 
-          {/* جدول */}
-
           <table className="ni-table">
 
             <thead>
-
               <tr>
-
-                <th>
-                  ردیف
-                </th>
+                <th>ردیف</th>
 
                 <th>
                   مشخصات کالا / خدمات
@@ -1409,9 +1372,7 @@ function App() {
                 <th>
                   مبلغ کل (ریال)
                 </th>
-
               </tr>
-
             </thead>
 
 
@@ -1419,7 +1380,6 @@ function App() {
 
               {items.map(
                 (item, i) => (
-
                   <tr key={i}>
 
                     <td>
@@ -1451,7 +1411,6 @@ function App() {
                     </td>
 
                   </tr>
-
                 )
               )}
 
@@ -1463,11 +1422,9 @@ function App() {
                     items.length
                 },
                 (_, i) => (
-
                   <tr
                     key={`empty-${i}`}
                   >
-
                     <td>
                       {items.length +
                         i +
@@ -1479,9 +1436,7 @@ function App() {
                     <td></td>
                     <td></td>
                     <td></td>
-
                   </tr>
-
                 )
               )}
 
@@ -1503,14 +1458,11 @@ function App() {
           </table>
 
 
-          {/* =================================================
-              قسمت پایین فرم
-             ================================================= */}
-
           <div className="ni-bottom">
 
-
-            {/* درخواست کننده */}
+            {/* =================================================
+                درخواست کننده
+                ================================================= */}
 
             <div className="ni-requester">
 
@@ -1518,19 +1470,15 @@ function App() {
                 درخواست کننده
               </div>
 
-
               <div className="ni-bottom-content">
 
                 <h4>
                   دلیل استفاده از کالا / خدمات
                 </h4>
 
-
                 <div className="reason-text">
-
                   {ni.reason ||
                     '................................................................................................'}
-
                 </div>
 
 
@@ -1540,12 +1488,24 @@ function App() {
                     امضاء درخواست کننده :
                   </span>
 
-                  <SignatureImage
-                    value={
-                      sig.requester
-                    }
-                    className="ni-signature-image"
-                  />
+
+                  {/*
+                   * اینجا همان امضای تنظیم کننده
+                   * مستقیماً کپی می‌شود.
+                   *
+                   * sig.requester همان PNG
+                   * شفاف امضای کشیده شده است.
+                   */}
+
+                  {sig.requester ? (
+                    <img
+                      src={
+                        sig.requester
+                      }
+                      alt="امضاء درخواست کننده"
+                      className="ni-signature-image"
+                    />
+                  ) : null}
 
                 </div>
 
@@ -1554,7 +1514,9 @@ function App() {
             </div>
 
 
-            {/* تایید کننده */}
+            {/* =================================================
+                تایید کننده
+                ================================================= */}
 
             <div>
 
@@ -1567,12 +1529,9 @@ function App() {
               </div>
 
               <div className="reason-text">
-
                 {ni.approverComment ||
                   '................................................................................................'}
-
               </div>
-
 
               <div className="checks">
 
@@ -1586,26 +1545,21 @@ function App() {
 
               </div>
 
+              <div className="signline">
 
-              <div className="signline ni-signature-line">
+                امضاء تایید کننده :
+                {' '}
 
-                <span>
-                  امضاء تایید کننده :
-                </span>
-
-                <SignatureImage
-                  value={
-                    sig.confirmer
-                  }
-                  className="ni-signature-image"
-                />
+                {sig.confirmer}
 
               </div>
 
             </div>
 
 
-            {/* تصویب کننده */}
+            {/* =================================================
+                تصویب کننده
+                ================================================= */}
 
             <div>
 
@@ -1613,19 +1567,12 @@ function App() {
                 تصویب کننده
               </h4>
 
+              <div className="signline">
 
-              <div className="signline ni-signature-line">
+                امضاء تصویب کننده :
+                {' '}
 
-                <span>
-                  امضاء تصویب کننده :
-                </span>
-
-                <SignatureImage
-                  value={
-                    sig.issuer
-                  }
-                  className="ni-signature-image"
-                />
+                {sig.issuer}
 
               </div>
 
@@ -1633,8 +1580,6 @@ function App() {
 
           </div>
 
-
-          {/* توضیحات */}
 
           <div className="notes">
 
@@ -1650,24 +1595,17 @@ function App() {
           </div>
 
         </div>
-
       </section>
     );
   };
 
 
-  /* =====================================================
-     UI
-     ===================================================== */
+  /* =========================================================
+     خروجی صفحه
+     ========================================================= */
 
   return (
-
     <div className="app-shell">
-
-
-      {/* =================================================
-          پنل کنترل
-         ================================================= */}
 
       <aside className="control-panel no-print">
 
@@ -1688,9 +1626,7 @@ function App() {
             مشخصات سربرگ فرم اصلی
           </h3>
 
-
           <label>
-
             عنوان فرم
 
             <input
@@ -1705,14 +1641,12 @@ function App() {
                 })
               }
             />
-
           </label>
 
 
           <div className="control-grid">
 
             <label>
-
               کد سند
 
               <input
@@ -1727,12 +1661,10 @@ function App() {
                   })
                 }
               />
-
             </label>
 
 
             <label>
-
               کد سند مرجع
 
               <input
@@ -1747,7 +1679,6 @@ function App() {
                   })
                 }
               />
-
             </label>
 
           </div>
@@ -1756,7 +1687,6 @@ function App() {
           <div className="control-grid">
 
             <label>
-
               تاریخ
 
               <JalaliDate
@@ -1767,12 +1697,10 @@ function App() {
                   updateMainDate
                 }
               />
-
             </label>
 
 
             <label>
-
               تاریخ واریزی
 
               <JalaliDate
@@ -1786,7 +1714,6 @@ function App() {
                   })
                 }
               />
-
             </label>
 
           </div>
@@ -1802,12 +1729,10 @@ function App() {
             ردیف‌های هزینه
           </h3>
 
-
           <div className="editor-table">
 
             {rows.map(
               (row, i) => (
-
                 <div
                   className="editor-row"
                   key={i}
@@ -1816,7 +1741,6 @@ function App() {
                   <b>
                     {i + 1}
                   </b>
-
 
                   <JalaliDate
                     value={
@@ -1831,7 +1755,6 @@ function App() {
                     }
                   />
 
-
                   <input
                     placeholder="محل مراجعه (بانک / شرکت)"
                     value={
@@ -1845,7 +1768,6 @@ function App() {
                       )
                     }
                   />
-
 
                   <select
                     value={
@@ -1925,7 +1847,6 @@ function App() {
                   />
 
                 </div>
-
               )
             )}
 
@@ -1934,7 +1855,7 @@ function App() {
         </section>
 
 
-        {/* فرم بدون فاکتور */}
+        {/* اطلاعات فرم بدون فاکتور */}
 
         <section>
 
@@ -1942,11 +1863,9 @@ function App() {
             اطلاعات فرم بدون فاکتور
           </h3>
 
-
           <div className="control-grid">
 
             <label>
-
               کد فرم
 
               <input
@@ -1961,12 +1880,10 @@ function App() {
                   })
                 }
               />
-
             </label>
 
 
             <label>
-
               کد سند مرجع
 
               <input
@@ -1981,12 +1898,10 @@ function App() {
                   })
                 }
               />
-
             </label>
 
 
             <label>
-
               تاریخ
 
               <JalaliDate
@@ -2000,12 +1915,10 @@ function App() {
                   })
                 }
               />
-
             </label>
 
 
             <label>
-
               درخواست کننده
 
               <input
@@ -2020,12 +1933,10 @@ function App() {
                   })
                 }
               />
-
             </label>
 
 
             <label>
-
               سمت
 
               <input
@@ -2040,12 +1951,10 @@ function App() {
                   })
                 }
               />
-
             </label>
 
 
             <label>
-
               واحد سازمانی
 
               <input
@@ -2060,14 +1969,12 @@ function App() {
                   })
                 }
               />
-
             </label>
 
           </div>
 
 
           <label>
-
             دلیل استفاده از کالا / خدمات
 
             <input
@@ -2082,12 +1989,10 @@ function App() {
                 })
               }
             />
-
           </label>
 
 
           <label>
-
             اظهار نظر تایید کننده
 
             <input
@@ -2102,12 +2007,10 @@ function App() {
                 })
               }
             />
-
           </label>
 
 
           <label>
-
             توضیحات
 
             <input
@@ -2122,22 +2025,19 @@ function App() {
                 })
               }
             />
-
           </label>
 
 
           <div className="helper">
-
             شرح‌هایی که شامل تاکسی، بلیط، ناهار، هتل، سوخت و موارد تعریف‌شده باشند، با مبلغ به فرم بدون فاکتور منتقل می‌شوند. هر فرم ۳ ردیف دارد.
-
           </div>
 
         </section>
 
 
         {/* =================================================
-            سه امضا
-           ================================================= */}
+            امضاها
+            ================================================= */}
 
         <section>
 
@@ -2145,9 +2045,7 @@ function App() {
             امضاها
           </h3>
 
-
-          <div className="signature-controls-grid">
-
+          <div className="control-grid three">
 
             {/* تنظیم کننده */}
 
@@ -2175,50 +2073,46 @@ function App() {
 
             {/* تایید کننده */}
 
-            <div className="signature-control">
+            <label>
 
-              <label>
-                تایید کننده
-              </label>
+              تایید کننده
 
-              <SignaturePad
+              <input
                 value={
                   sig.confirmer
                 }
-                onChange={value =>
+                onChange={e =>
                   setSig(prev => ({
                     ...prev,
                     confirmer:
-                      value
+                      e.target.value
                   }))
                 }
               />
 
-            </div>
+            </label>
 
 
             {/* تصویب کننده */}
 
-            <div className="signature-control">
+            <label>
 
-              <label>
-                تصویب کننده
-              </label>
+              تصویب کننده
 
-              <SignaturePad
+              <input
                 value={
                   sig.issuer
                 }
-                onChange={value =>
+                onChange={e =>
                   setSig(prev => ({
                     ...prev,
                     issuer:
-                      value
+                      e.target.value
                   }))
                 }
               />
 
-            </div>
+            </label>
 
           </div>
 
@@ -2279,7 +2173,7 @@ function App() {
 
       {/* =================================================
           پیش‌نمایش
-         ================================================= */}
+          ================================================= */}
 
       <main className="preview-area">
 
@@ -2348,13 +2242,9 @@ function App() {
 
                 <tr>
 
-                  <th>
-                    ردیف
-                  </th>
+                  <th>ردیف</th>
 
-                  <th>
-                    تاریخ
-                  </th>
+                  <th>تاریخ</th>
 
                   <th>
                     محل مراجعه
@@ -2387,7 +2277,6 @@ function App() {
 
                 {rows.map(
                   (row, i) => (
-
                     <tr key={i}>
 
                       <td>
@@ -2421,7 +2310,6 @@ function App() {
                       </td>
 
                     </tr>
-
                   )
                 )}
 
@@ -2438,14 +2326,12 @@ function App() {
                       '………………'}
                   </td>
 
-
                   <td
                     colSpan="4"
                     className="total-label"
                   >
                     جمع کل هزینه :
                   </td>
-
 
                   <td>
                     {money(total)}
@@ -2462,6 +2348,7 @@ function App() {
 
             <div className="signature-row">
 
+              {/* تنظیم کننده */}
 
               <div>
 
@@ -2475,16 +2362,21 @@ function App() {
 
                 <strong className="signature-display">
 
-                  <SignatureImage
-                    value={
-                      sig.requester
-                    }
-                  />
+                  {sig.requester && (
+                    <img
+                      src={
+                        sig.requester
+                      }
+                      alt="امضاء تنظیم کننده"
+                    />
+                  )}
 
                 </strong>
 
               </div>
 
+
+              {/* تایید کننده */}
 
               <div>
 
@@ -2496,18 +2388,14 @@ function App() {
                   تایید کننده :
                 </span>
 
-                <strong className="signature-display">
-
-                  <SignatureImage
-                    value={
-                      sig.confirmer
-                    }
-                  />
-
+                <strong>
+                  {sig.confirmer}
                 </strong>
 
               </div>
 
+
+              {/* تصویب کننده */}
 
               <div>
 
@@ -2519,14 +2407,8 @@ function App() {
                   تصویب کننده :
                 </span>
 
-                <strong className="signature-display">
-
-                  <SignatureImage
-                    value={
-                      sig.issuer
-                    }
-                  />
-
+                <strong>
+                  {sig.issuer}
                 </strong>
 
               </div>
@@ -2541,32 +2423,27 @@ function App() {
         {/* فرم‌های بدون فاکتور */}
 
         {niPages.length > 0 && (
-
           <>
 
             <div className="preview-note no-print">
               پیش‌نمایش فرم‌های هزینه بدون فاکتور
             </div>
 
-
             <div className="no-invoice-pages">
 
               {niPages.map(
                 (items, i) => (
-
                   <NoInvoice
                     key={i}
                     items={items}
                     index={i}
                   />
-
                 )
               )}
 
             </div>
 
           </>
-
         )}
 
       </main>
