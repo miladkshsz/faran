@@ -4,132 +4,879 @@
   background: #e9edf2;
   font-synthesis: none;
 }
-* { box-sizing: border-box; }
-html, body, #root { min-height: 100%; margin: 0; }
-body { background: #e9edf2; }
-button, input, select { font: inherit; }
-.app-shell { min-height: 100vh; display: flex; flex-direction: row-reverse; gap: 22px; padding: 22px; align-items: flex-start; direction: rtl; }
-.control-panel { width: 560px; flex: 0 0 560px; background: #fff; border: 1px solid #d6dbe1; border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,.07); position: sticky; top: 16px; max-height: calc(100vh - 32px); overflow-y: auto; direction: rtl; }
-.panel-title { font-size: 22px; font-weight: 800; margin-bottom: 3px; }
-.panel-subtitle { color: #69717c; font-size: 12px; line-height: 1.8; margin-bottom: 18px; }
-.control-panel section { margin-top: 17px; padding-top: 10px; border-top: 1px solid #e6e9ed; }
-.control-panel h3 { font-size: 13px; font-weight: 800; margin: 0 0 9px; color: #3b424a; }
-.control-panel label { display: block; font-size: 11px; font-weight: 700; margin-bottom: 7px; color: #3b424a; }
-.control-panel label > input, .control-panel label > select { display: block; width: 100%; height: 35px; margin-top: 4px; border: 1px solid #cfd5dc; border-radius: 7px; padding: 0 8px; background: #fff; outline: none; font-size: 11px; direction: rtl; text-align: right; }
-.control-panel label > input:focus, .control-panel label > select:focus { border-color: #6b7280; box-shadow: 0 0 0 2px rgba(107,114,128,.12); }
-.control-panel input::placeholder { color: #999; }
-.control-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-.control-grid.three { grid-template-columns: repeat(3, 1fr); }
-.jalali-date { height: 35px; position: relative; width: 100%; }
-.jalali-input { width: 100%; height: 35px; border: 1px solid #cfd5dc; border-radius: 7px; background: #fff; cursor: pointer; padding: 0 9px; display: flex; align-items: center; justify-content: space-between; direction: rtl; color: #333; font-size: 11px; }
-.jalali-input:hover { border-color: #9aa2ab; }
-.jalali-input:focus { outline: none; border-color: #6b7280; box-shadow: 0 0 0 2px rgba(107,114,128,.12); }
-.jalali-input span:first-child { color: #999; font-weight: 400; }
-.jalali-input span:first-child.has-value { color: #333; }
-.calendar-icon { font-size: 14px; line-height: 1; }
-.jalali-calendar { position: absolute; z-index: 1000; top: calc(100% + 6px); right: 0; width: 285px; background: #fff; border: 1px solid #cfd5dc; border-radius: 12px; padding: 10px; box-shadow: 0 12px 30px rgba(0,0,0,.18); direction: rtl; }
-.jalali-calendar-head { display: grid; grid-template-columns: 34px 1fr 34px; align-items: center; gap: 6px; margin-bottom: 9px; }
-.jalali-calendar-head strong { text-align: center; font-size: 12px; }
-.jalali-calendar-head button { width: 34px; height: 30px; border: 1px solid #d7dce1; background: #f7f8f9; border-radius: 7px; cursor: pointer; font-size: 20px; line-height: 1; }
-.jalali-calendar-head button:hover { background: #e9edf2; }
-.jalali-weekdays, .jalali-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
-.jalali-weekdays span { text-align: center; font-size: 9px; color: #6b7280; font-weight: 700; padding: 4px 0; }
-.jalali-days button, .jalali-days span { height: 30px; min-width: 0; }
-.jalali-days button { border: 0; background: #fff; border-radius: 7px; cursor: pointer; font-size: 10px; color: #222; }
-.jalali-days button:hover { background: #eef0f2; }
-.jalali-days button.selected { background: #20252b; color: #fff; font-weight: 700; }
-.editor-table { display: grid; gap: 6px; }
-.editor-row { border: 1px solid #e0e4e8; background: #f8f9fa; border-radius: 8px; padding: 7px; display: grid; grid-template-columns: 28px 1fr 1fr; gap: 5px; }
-.editor-row b { grid-column: 1 / -1; font-size: 10px; color: #555; }
-.editor-row input, .editor-row select { width: 100%; height: 31px; border: 1px solid #d3d8de; border-radius: 6px; padding: 0 5px; font-size: 10px; min-width: 0; direction: rtl; text-align: right; background: #fff; }
-.editor-row .jalali-date { height: 31px; }
-.editor-row .jalali-input { height: 31px; font-size: 10px; padding: 0 6px; }
-.editor-row .calendar-icon { font-size: 12px; }
-.editor-row .description-input { white-space: pre-wrap; }
-.helper { font-size: 10px; color: #777; line-height: 1.8; margin-top: 4px; }
-.action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 18px; }
-.action-grid button { min-height: 42px; border: 0; border-radius: 9px; cursor: pointer; background: #20252b; color: #fff; font-weight: 700; font-size: 12px; }
-.action-grid button:hover:not(:disabled) { background: #2a3035; }
-.action-grid button:disabled { opacity: .5; cursor: not-allowed; }
-.action-grid button.secondary { background: #eef0f2; color: #333; }
-.preview-area { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 18px; }
-.preview-note { font-size: 11px; color: #68717b; }
-.paper { background: #fff; box-shadow: 0 10px 35px rgba(0,0,0,.16); position: relative; overflow: hidden; }
-.main-paper { width: min(100%, 1120px); aspect-ratio: 297 / 210; padding: 6.2% 6%; }
-.form-frame { width: 100%; height: 100%; display: flex; flex-direction: column; }
-.main-header { height: 17%; display: grid; grid-template-columns: 35% 47% 18%; direction: ltr; border: 1.4px solid #111; }
-.header-codes, .header-title, .header-logo { direction: rtl; }
-.header-codes { display: flex; flex-direction: column; font-size: clamp(8px, .95vw, 12px); text-align: right; border-right: 1px solid #111; }
-.header-codes div { flex: 1; display: flex; align-items: center; justify-content: flex-start; padding: 0 7px; border-bottom: 1px solid #111; white-space: nowrap; }
-.header-codes div:last-child { border-bottom: 0; }
-.header-codes b { direction: ltr; margin-right: 4px; }
-.header-title { display: flex; align-items: center; justify-content: center; text-align: center; font-size: clamp(9px, 1.2vw, 15px); font-weight: 700; border-right: 1px solid #111; line-height: 1.3; padding: 5px; }
-.header-logo { display: flex; align-items: center; justify-content: center; padding: 5px; }
-.header-logo img { width: 82%; max-height: 82%; object-fit: contain; }
-.expense-table { width: 100%; height: 66%; border-collapse: collapse; table-layout: fixed; direction: rtl; font-size: clamp(6px, .8vw, 10px); }
-.expense-table th, .expense-table td { border: 1px solid #111; padding: 1px 3px; text-align: center; vertical-align: middle; overflow: hidden; }
-.expense-table th { height: 11%; background: #f7f7f7; line-height: 1.25; }
-.expense-table tbody tr { height: 9.4%; }
-.expense-table td { white-space: nowrap; }
-.expense-table .description-cell { white-space: normal; text-align: right; line-height: 1.25; overflow-wrap: anywhere; }
-.expense-table .amount-cell { direction: rtl; }
-.expense-table .total-row td { height: 8%; font-weight: 700; background: #fafafa; }
-.expense-table .total-label, .expense-table .total-date { text-align: right; padding-right: 8px; }
-.signature-row { height: 17%; display: grid; grid-template-columns: 1fr 1fr 1fr; direction: rtl; }
-.signature-row > div { direction: rtl; border: 1px solid #111; border-top: 0; padding: 7px 8px; font-size: clamp(7px, .75vw, 10px); text-align: right; }
-.signature-row > div + div { border-right: 0; }
-.signature-row b { display: block; font-weight: 500; margin-bottom: 5px; }
-.signature-row span { display: block; font-weight: 600; }
-.signature-row strong { display: block; margin-top: 18px; font-weight: 400; }
-.no-invoice-paper { width: min(100%, 820px); aspect-ratio: 210 / 297; }
-.ni-frame { position: absolute; width: 86%; height: 88%; left: 7%; top: 6%; display: flex; flex-direction: column; border: 1.5px solid #111; }
-.ni-top { height: 13%; display: grid; grid-template-columns: 18% 47% 35%; direction: rtl; border-bottom: 1px solid #111; }
-.ni-code-box, .ni-title, .ni-logo { direction: rtl; }
-.ni-code-box { display: flex; flex-direction: column; font-size: 9px; border-left: 1px solid #111; }
-.ni-code-box div { flex: 1; display: flex; align-items: center; justify-content: flex-start; padding: 0 6px; border-bottom: 1px solid #111; }
-.ni-code-box div:last-child { border-bottom: 0; }
-.ni-code-box b { font-weight: 600; margin-right: 4px; direction: ltr; }
-.ni-title { display: flex; align-items: center; justify-content: center; text-align: center; font-size: 13px; font-weight: 700; border-left: 1px solid #111; padding: 4px; }
-.ni-logo { display: flex; align-items: center; justify-content: center; padding: 6px; }
-.ni-logo img { width: 78%; max-height: 82%; object-fit: contain; }
-.ni-info { height: 17%; border-bottom: 1px solid #111; display: grid; grid-template-columns: 1fr 1fr; font-size: 9px; }
-.ni-info div { padding: 5px 7px; border-left: 1px solid #111; display: flex; align-items: center; gap: 4px; }
-.ni-info div:nth-child(2n) { border-left: 0; }
-.ni-info .wide { grid-column: 1 / -1; border-top: 1px solid #111; }
-.ni-info b { font-weight: 600; white-space: nowrap; }
-.ni-info span { overflow-wrap: anywhere; }
-.ni-table { width: 100%; height: 36%; border-collapse: collapse; table-layout: fixed; direction: rtl; font-size: 9px; }
-.ni-table th, .ni-table td { border: 1px solid #111; padding: 2px 4px; text-align: center; vertical-align: middle; }
-.ni-table th { height: 20%; background: #f7f7f7; }
-.ni-table tbody tr:not(.ni-total) { height: 26.6%; }
-.ni-table td { overflow: hidden; white-space: nowrap; }
-.ni-table .ni-total td { height: 16%; font-weight: 700; background: #fafafa; }
-.ni-bottom { height: 29%; display: grid; grid-template-columns: 1fr 1fr 1fr; direction: rtl; }
-.ni-bottom > div { border-left: 1px solid #111; padding: 6px; font-size: 8.5px; position: relative; }
-.ni-bottom > div:last-child { border-left: 0; }
-.ni-bottom h4 { font-size: 9px; margin: 0 0 8px; padding-bottom: 5px; border-bottom: 1px solid #111; }
-.ni-requester { display: flex; padding: 0 !important; }
-.vertical-requester { width: 30px; flex: 0 0 30px; border-left: 1px solid #111; writing-mode: vertical-rl; text-orientation: mixed; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 10px; }
-.ni-bottom-content { flex: 1; padding: 6px; position: relative; }
-.reason-text { line-height: 1.7; overflow-wrap: anywhere; }
-.signline { position: absolute; bottom: 7px; right: 6px; left: 6px; border-top: 1px dotted #222; padding-top: 4px; }
-.checks { display: flex; gap: 12px; align-items: center; margin-top: 18px; white-space: nowrap; }
-.notes { height: 10%; border-top: 1px solid #111; padding: 5px 7px; font-size: 8.5px; overflow: hidden; }
-.no-invoice-pages { display: flex; flex-direction: column; gap: 18px; width: min(100%, 820px); }
-@media (max-width: 1100px) { .app-shell { flex-direction: column; padding: 10px; } .control-panel { width: 100%; flex-basis: auto; position: relative; top: auto; max-height: none; } .preview-area { width: 100%; } }
-@media (max-width: 650px) { .control-grid, .control-grid.three { grid-template-columns: 1fr; } .action-grid { grid-template-columns: 1fr; } .main-paper { min-width: 760px; } .no-invoice-paper { min-width: 650px; } .preview-area { overflow-x: auto; align-items: flex-start; } .preview-note { align-self: flex-start; } .control-panel { width: 100%; } .jalali-calendar { width: 270px; right: 0; } }
-@media print { @page { size: A4 landscape; margin: 0; } html, body, #root { background: #fff !important; } .no-print, .control-panel, .preview-note { display: none !important; } .app-shell { display: block !important; padding: 0 !important; margin: 0 !important; min-height: auto; } .preview-area { display: block !important; width: 100% !important; } .paper { box-shadow: none !important; border: none !important; margin: 0 !important; } .main-paper { width: 297mm !important; height: 210mm !important; aspect-ratio: auto !important; page-break-after: always; } .no-invoice-pages { width: auto !important; display: block !important; } .no-invoice-paper { width: 210mm !important; height: 297mm !important; aspect-ratio: auto !important; page-break-after: always; } .ni-frame { width: 86% !important; height: 88% !important; left: 7% !important; top: 6% !important; } }
-.control-panel::-webkit-scrollbar { width: 8px; }
-.control-panel::-webkit-scrollbar-track { background: #f1f3f5; border-radius: 10px; }
-.control-panel::-webkit-scrollbar-thumb { background: #cfd5dc; border-radius: 10px; }
-/* =========================================
-   امضای تنظیم کننده
-   ========================================= */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  margin: 0;
+}
+
+body {
+  background: #e9edf2;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 22px;
+  padding: 22px;
+  align-items: flex-start;
+  direction: rtl;
+}
+
+.control-panel {
+  width: 560px;
+  flex: 0 0 560px;
+  background: #fff;
+  border: 1px solid #d6dbe1;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .07);
+  position: sticky;
+  top: 16px;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  direction: rtl;
+}
+
+.panel-title {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 3px;
+}
+
+.panel-subtitle {
+  color: #69717c;
+  font-size: 12px;
+  line-height: 1.8;
+  margin-bottom: 18px;
+}
+
+.control-panel section {
+  margin-top: 17px;
+  padding-top: 10px;
+  border-top: 1px solid #e6e9ed;
+}
+
+.control-panel h3 {
+  font-size: 13px;
+  font-weight: 800;
+  margin: 0 0 9px;
+  color: #3b424a;
+}
+
+.control-panel label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 7px;
+  color: #3b424a;
+}
+
+.control-panel label > input,
+.control-panel label > select {
+  display: block;
+  width: 100%;
+  height: 35px;
+  margin-top: 4px;
+  border: 1px solid #cfd5dc;
+  border-radius: 7px;
+  padding: 0 8px;
+  background: #fff;
+  outline: none;
+  font-size: 11px;
+  direction: rtl;
+  text-align: right;
+}
+
+.control-panel label > input:focus,
+.control-panel label > select:focus {
+  border-color: #6b7280;
+  box-shadow: 0 0 0 2px rgba(107, 114, 128, .12);
+}
+
+.control-panel input::placeholder {
+  color: #999;
+}
+
+.control-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+
+.jalali-date {
+  height: 35px;
+  position: relative;
+  width: 100%;
+}
+
+.jalali-input {
+  width: 100%;
+  height: 35px;
+  border: 1px solid #cfd5dc;
+  border-radius: 7px;
+  background: #fff;
+  cursor: pointer;
+  padding: 0 9px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  direction: rtl;
+  color: #333;
+  font-size: 11px;
+}
+
+.jalali-input:hover {
+  border-color: #9aa2ab;
+}
+
+.jalali-input:focus {
+  outline: none;
+  border-color: #6b7280;
+  box-shadow: 0 0 0 2px rgba(107, 114, 128, .12);
+}
+
+.jalali-input span:first-child {
+  color: #999;
+  font-weight: 400;
+}
+
+.jalali-input span:first-child.has-value {
+  color: #333;
+}
+
+.calendar-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.jalali-calendar {
+  position: absolute;
+  z-index: 1000;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 285px;
+  background: #fff;
+  border: 1px solid #cfd5dc;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .18);
+  direction: rtl;
+}
+
+.jalali-calendar-head {
+  display: grid;
+  grid-template-columns: 34px 1fr 34px;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 9px;
+}
+
+.jalali-calendar-head strong {
+  text-align: center;
+  font-size: 12px;
+}
+
+.jalali-calendar-head button {
+  width: 34px;
+  height: 30px;
+  border: 1px solid #d7dce1;
+  background: #f7f8f9;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.jalali-calendar-head button:hover {
+  background: #e9edf2;
+}
+
+.jalali-weekdays,
+.jalali-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 3px;
+}
+
+.jalali-weekdays span {
+  text-align: center;
+  font-size: 9px;
+  color: #6b7280;
+  font-weight: 700;
+  padding: 4px 0;
+}
+
+.jalali-days button,
+.jalali-days span {
+  height: 30px;
+  min-width: 0;
+}
+
+.jalali-days button {
+  border: 0;
+  background: #fff;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 10px;
+  color: #222;
+}
+
+.jalali-days button:hover {
+  background: #eef0f2;
+}
+
+.jalali-days button.selected {
+  background: #20252b;
+  color: #fff;
+  font-weight: 700;
+}
+
+
+/* =====================================================
+   جدول ویرایش
+   ===================================================== */
+
+.editor-table {
+  display: grid;
+  gap: 6px;
+}
+
+.editor-row {
+  border: 1px solid #e0e4e8;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 7px;
+  display: grid;
+  grid-template-columns: 28px 1fr 1fr;
+  gap: 5px;
+}
+
+.editor-row b {
+  grid-column: 1 / -1;
+  font-size: 10px;
+  color: #555;
+}
+
+.editor-row input,
+.editor-row select {
+  width: 100%;
+  height: 31px;
+  border: 1px solid #d3d8de;
+  border-radius: 6px;
+  padding: 0 5px;
+  font-size: 10px;
+  min-width: 0;
+  direction: rtl;
+  text-align: right;
+  background: #fff;
+}
+
+.editor-row .jalali-date {
+  height: 31px;
+}
+
+.editor-row .jalali-input {
+  height: 31px;
+  font-size: 10px;
+  padding: 0 6px;
+}
+
+.editor-row .calendar-icon {
+  font-size: 12px;
+}
+
+.editor-row .description-input {
+  white-space: pre-wrap;
+}
+
+.helper {
+  font-size: 10px;
+  color: #777;
+  line-height: 1.8;
+  margin-top: 4px;
+}
+
+
+/* =====================================================
+   دکمه‌ها
+   ===================================================== */
+
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.action-grid button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 9px;
+  cursor: pointer;
+  background: #20252b;
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.action-grid button:hover:not(:disabled) {
+  background: #2a3035;
+}
+
+.action-grid button:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.action-grid button.secondary {
+  background: #eef0f2;
+  color: #333;
+}
+
+
+/* =====================================================
+   پیش‌نمایش
+   ===================================================== */
+
+.preview-area {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.preview-note {
+  font-size: 11px;
+  color: #68717b;
+}
+
+.paper {
+  background: #fff;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, .16);
+  position: relative;
+  overflow: hidden;
+}
+
+.main-paper {
+  width: min(100%, 1120px);
+  aspect-ratio: 297 / 210;
+  padding: 6.2% 6%;
+}
+
+.form-frame {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-header {
+  height: 17%;
+  display: grid;
+  grid-template-columns: 35% 47% 18%;
+  direction: ltr;
+  border: 1.4px solid #111;
+}
+
+.header-codes,
+.header-title,
+.header-logo {
+  direction: rtl;
+}
+
+.header-codes {
+  display: flex;
+  flex-direction: column;
+  font-size: clamp(8px, .95vw, 12px);
+  text-align: right;
+  border-right: 1px solid #111;
+}
+
+.header-codes div {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 7px;
+  border-bottom: 1px solid #111;
+  white-space: nowrap;
+}
+
+.header-codes div:last-child {
+  border-bottom: 0;
+}
+
+.header-codes b {
+  direction: ltr;
+  margin-right: 4px;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: clamp(9px, 1.2vw, 15px);
+  font-weight: 700;
+  border-right: 1px solid #111;
+  line-height: 1.3;
+  padding: 5px;
+}
+
+.header-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+}
+
+.header-logo img {
+  width: 82%;
+  max-height: 82%;
+  object-fit: contain;
+}
+
+
+/* =====================================================
+   جدول اصلی
+   ===================================================== */
+
+.expense-table {
+  width: 100%;
+  height: 66%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  direction: rtl;
+  font-size: clamp(6px, .8vw, 10px);
+}
+
+.expense-table th,
+.expense-table td {
+  border: 1px solid #111;
+  padding: 1px 3px;
+  text-align: center;
+  vertical-align: middle;
+  overflow: hidden;
+}
+
+.expense-table th {
+  height: 11%;
+  background: #f7f7f7;
+  line-height: 1.25;
+}
+
+.expense-table tbody tr {
+  height: 9.4%;
+}
+
+.expense-table td {
+  white-space: nowrap;
+}
+
+.expense-table .description-cell {
+  white-space: normal;
+  text-align: right;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+.expense-table .amount-cell {
+  direction: rtl;
+}
+
+.expense-table .total-row td {
+  height: 8%;
+  font-weight: 700;
+  background: #fafafa;
+}
+
+.expense-table .total-label,
+.expense-table .total-date {
+  text-align: right;
+  padding-right: 8px;
+}
+
+
+/* =====================================================
+   امضاهای فرم اصلی
+   ===================================================== */
+
+.signature-row {
+  height: 17%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  direction: rtl;
+}
+
+.signature-row > div {
+  direction: rtl;
+  border: 1px solid #111;
+  border-top: 0;
+  padding: 7px 8px;
+  font-size: clamp(7px, .75vw, 10px);
+  text-align: right;
+  position: relative;
+}
+
+.signature-row > div + div {
+  border-right: 0;
+}
+
+.signature-row b {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.signature-row span {
+  display: block;
+  font-weight: 600;
+}
+
+.signature-row strong {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  margin-top: 5px;
+  font-weight: 400;
+  overflow: hidden;
+}
+
+.signature-display img {
+  display: block;
+  width: 150px;
+  height: auto;
+  max-height: 48px;
+  object-fit: contain;
+}
+
+
+/* =====================================================
+   فرم بدون فاکتور
+   ===================================================== */
+
+.no-invoice-paper {
+  width: min(100%, 820px);
+  aspect-ratio: 210 / 297;
+}
+
+.ni-frame {
+  position: absolute;
+  width: 86%;
+  height: 88%;
+  left: 7%;
+  top: 6%;
+  display: flex;
+  flex-direction: column;
+  border: 1.5px solid #111;
+}
+
+.ni-top {
+  height: 13%;
+  display: grid;
+  grid-template-columns: 18% 47% 35%;
+  direction: rtl;
+  border-bottom: 1px solid #111;
+}
+
+.ni-code-box,
+.ni-title,
+.ni-logo {
+  direction: rtl;
+}
+
+.ni-code-box {
+  display: flex;
+  flex-direction: column;
+  font-size: 9px;
+  border-left: 1px solid #111;
+}
+
+.ni-code-box div {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 6px;
+  border-bottom: 1px solid #111;
+}
+
+.ni-code-box div:last-child {
+  border-bottom: 0;
+}
+
+.ni-code-box b {
+  font-weight: 600;
+  margin-right: 4px;
+  direction: ltr;
+}
+
+.ni-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 700;
+  border-left: 1px solid #111;
+  padding: 4px;
+}
+
+.ni-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+}
+
+.ni-logo img {
+  width: 78%;
+  max-height: 82%;
+  object-fit: contain;
+}
+
+.ni-info {
+  height: 17%;
+  border-bottom: 1px solid #111;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  font-size: 9px;
+}
+
+.ni-info div {
+  padding: 5px 7px;
+  border-left: 1px solid #111;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ni-info div:nth-child(2n) {
+  border-left: 0;
+}
+
+.ni-info .wide {
+  grid-column: 1 / -1;
+  border-top: 1px solid #111;
+}
+
+.ni-info b {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.ni-info span {
+  overflow-wrap: anywhere;
+}
+
+
+/* =====================================================
+   جدول بدون فاکتور
+   ===================================================== */
+
+.ni-table {
+  width: 100%;
+  height: 36%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  direction: rtl;
+  font-size: 9px;
+}
+
+.ni-table th,
+.ni-table td {
+  border: 1px solid #111;
+  padding: 2px 4px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.ni-table th {
+  height: 20%;
+  background: #f7f7f7;
+}
+
+.ni-table tbody tr:not(.ni-total) {
+  height: 26.6%;
+}
+
+.ni-table td {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.ni-table .ni-total td {
+  height: 16%;
+  font-weight: 700;
+  background: #fafafa;
+}
+
+
+/* =====================================================
+   قسمت پایین فرم بدون فاکتور
+   ===================================================== */
+
+.ni-bottom {
+  height: 29%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  direction: rtl;
+}
+
+.ni-bottom > div {
+  border-left: 1px solid #111;
+  padding: 6px;
+  font-size: 8.5px;
+  position: relative;
+}
+
+.ni-bottom > div:last-child {
+  border-left: 0;
+}
+
+.ni-bottom h4 {
+  font-size: 9px;
+  margin: 0 0 8px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #111;
+}
+
+.ni-requester {
+  display: flex;
+  padding: 0 !important;
+}
+
+.vertical-requester {
+  width: 30px;
+  flex: 0 0 30px;
+  border-left: 1px solid #111;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 10px;
+}
+
+.ni-bottom-content {
+  flex: 1;
+  padding: 6px;
+  position: relative;
+}
+
+.reason-text {
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+
+/* =====================================================
+   خط امضا در فرم بدون فاکتور
+   ===================================================== */
+
+.signline {
+  position: absolute;
+  bottom: 7px;
+  right: 6px;
+  left: 6px;
+  border-top: 1px dotted #222;
+  padding-top: 4px;
+}
+
+.ni-signature-line {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 45px;
+  overflow: hidden;
+}
+
+.ni-signature-line > span {
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.ni-signature-image {
+  display: block !important;
+  width: 115px !important;
+  height: 38px !important;
+  max-width: 115px !important;
+  max-height: 38px !important;
+  object-fit: contain !important;
+  flex: 0 0 auto;
+}
+
+
+/* =====================================================
+   چک باکس
+   ===================================================== */
+
+.checks {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 18px;
+  white-space: nowrap;
+}
+
+
+/* =====================================================
+   توضیحات
+   ===================================================== */
+
+.notes {
+  height: 10%;
+  border-top: 1px solid #111;
+  padding: 5px 7px;
+  font-size: 8.5px;
+  overflow: hidden;
+}
+
+
+/* =====================================================
+   صفحات بدون فاکتور
+   ===================================================== */
+
+.no-invoice-pages {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: min(100%, 820px);
+}
+
+
+/* =====================================================
+   پنل سه امضا
+   ===================================================== */
+
+.signature-controls-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+}
 
 .signature-control {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 5px;
   min-width: 0;
 }
 
@@ -140,14 +887,14 @@ button, input, select { font: inherit; }
 .signature-pad-wrap {
   position: relative;
   width: 100%;
-  min-height: 90px;
+  min-height: 95px;
   background: #fff;
 }
 
 .signature-pad {
   display: block;
   width: 100%;
-  height: 90px;
+  height: 95px;
   background: #fff;
   border: 1px solid #777;
   border-radius: 5px;
@@ -161,9 +908,9 @@ button, input, select { font: inherit; }
   left: 5px;
   bottom: 5px;
   border: 0;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, .92);
   color: #555;
-  font-size: 10px;
+  font-size: 9px;
   padding: 2px 6px;
   cursor: pointer;
   border-radius: 3px;
@@ -174,56 +921,177 @@ button, input, select { font: inherit; }
 }
 
 
-/* =========================================
-   نمایش امضا در فرم اصلی
-   ========================================= */
+/* =====================================================
+   اسکرول پنل
+   ===================================================== */
 
-.signature-display {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 48px;
-  min-height: 48px;
-  overflow: hidden;
+.control-panel::-webkit-scrollbar {
+  width: 8px;
 }
 
-.signature-display img {
-  display: block;
-  width: 150px;
-  height: auto;
-  max-height: 48px;
-  object-fit: contain;
+.control-panel::-webkit-scrollbar-track {
+  background: #f1f3f5;
+  border-radius: 10px;
+}
+
+.control-panel::-webkit-scrollbar-thumb {
+  background: #cfd5dc;
+  border-radius: 10px;
 }
 
 
-/* =========================================
-   نمایش امضا در فرم بدون فاکتور
-   ========================================= */
+/* =====================================================
+   ریسپانسیو
+   ===================================================== */
 
-.ni-signature-line {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  min-height: 45px;
+@media (max-width: 1100px) {
+
+  .app-shell {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .control-panel {
+    width: 100%;
+    flex-basis: auto;
+    position: relative;
+    top: auto;
+    max-height: none;
+  }
+
+  .preview-area {
+    width: 100%;
+  }
+
 }
 
-.ni-signature-image {
-  display: inline-block;
-  width: 130px;
-  height: 42px;
-  object-fit: contain;
-  vertical-align: middle;
+@media (max-width: 700px) {
+
+  .control-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .signature-controls-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .action-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .main-paper {
+    min-width: 760px;
+  }
+
+  .no-invoice-paper {
+    min-width: 650px;
+  }
+
+  .preview-area {
+    overflow-x: auto;
+    align-items: flex-start;
+  }
+
+  .preview-note {
+    align-self: flex-start;
+  }
+
+  .control-panel {
+    width: 100%;
+  }
+
+  .jalali-calendar {
+    width: 270px;
+    right: 0;
+  }
+
 }
 
 
-/* =========================================
-   چاپ و PDF
-   ========================================= */
+/* =====================================================
+   چاپ
+   ===================================================== */
 
 @media print {
+
+  @page {
+    size: A4 landscape;
+    margin: 0;
+  }
+
+  html,
+  body,
+  #root {
+    background: #fff !important;
+  }
+
+  .no-print,
+  .control-panel,
+  .preview-note {
+    display: none !important;
+  }
+
+  .app-shell {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-height: auto;
+  }
+
+  .preview-area {
+    display: block !important;
+    width: 100% !important;
+  }
+
+  .paper {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+  }
+
+  .main-paper {
+    width: 297mm !important;
+    height: 210mm !important;
+    aspect-ratio: auto !important;
+    page-break-after: always;
+  }
+
+  .no-invoice-pages {
+    width: auto !important;
+    display: block !important;
+  }
+
+  .no-invoice-paper {
+    width: 210mm !important;
+    height: 297mm !important;
+    aspect-ratio: auto !important;
+    page-break-after: always;
+  }
+
+  .ni-frame {
+    width: 86% !important;
+    height: 88% !important;
+    left: 7% !important;
+    top: 6% !important;
+  }
+
   .signature-clear {
     display: none !important;
   }
+
 }
-::selection { background: #20252b; color: #fff; }
-::-moz-selection { background: #20252b; color: #fff; }
+
+
+/* =====================================================
+   انتخاب متن
+   ===================================================== */
+
+::selection {
+  background: #20252b;
+  color: #fff;
+}
+
+::-moz-selection {
+  background: #20252b;
+  color: #fff;
+}
