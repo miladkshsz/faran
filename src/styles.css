@@ -1128,16 +1128,21 @@ select {
    چاپ
    ========================================= */
 
+/* =========================================
+   چاپ دقیق فرم‌ها
+   ========================================= */
+
 @media print {
 
-  @page {
-    size: A4 landscape;
-    margin: 0;
-  }
+  /* ---------- تنظیمات عمومی ---------- */
 
   html,
   body,
   #root {
+    width: 100%;
+    min-height: 100%;
+    margin: 0 !important;
+    padding: 0 !important;
     background: #fff !important;
   }
 
@@ -1149,52 +1154,109 @@ select {
 
   .app-shell {
     display: block !important;
+    width: 100% !important;
+    min-height: 0 !important;
     padding: 0 !important;
     margin: 0 !important;
-    min-height: auto;
   }
 
   .preview-area {
     display: block !important;
     width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .paper {
     box-shadow: none !important;
-    border: none !important;
+    border: 0 !important;
     margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
   }
+
+
+  /* =========================================
+     فرم اصلی
+     A4 افقی
+     ========================================= */
 
   .main-paper {
     width: 297mm !important;
     height: 210mm !important;
+
+    min-width: 297mm !important;
+    max-width: 297mm !important;
+
+    min-height: 210mm !important;
+    max-height: 210mm !important;
+
     aspect-ratio: auto !important;
-    page-break-after: always;
+
+    page-break-before: auto !important;
+    page-break-after: always !important;
+    break-before: auto !important;
+    break-after: page !important;
+
+    margin: 0 !important;
+    padding: 6.2% 6% !important;
   }
 
+
+  /* =========================================
+     فرم‌های بدون فاکتور
+     A4 عمودی
+     ========================================= */
+
   .no-invoice-pages {
-    width: auto !important;
     display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .no-invoice-paper {
     width: 210mm !important;
     height: 297mm !important;
+
+    min-width: 210mm !important;
+    max-width: 210mm !important;
+
+    min-height: 297mm !important;
+    max-height: 297mm !important;
+
     aspect-ratio: auto !important;
-    page-break-after: always;
+
+    page-break-before: auto !important;
+    page-break-after: always !important;
+    break-before: auto !important;
+    break-after: page !important;
+
+    margin: 0 !important;
+    padding: 0 !important;
   }
+
+
+  /* =========================================
+     قاب فرم بدون فاکتور
+     ========================================= */
 
   .ni-frame {
+    position: absolute !important;
+
     width: 86% !important;
     height: 88% !important;
+
     left: 7% !important;
     top: 6% !important;
+
+    margin: 0 !important;
   }
 
 
-  /* -----------------------------------------
-     امضا هنگام چاپ
-     ----------------------------------------- */
+  /* =========================================
+     جلوگیری از تغییر امضا در چاپ
+     ========================================= */
 
   .signature-pad-wrap {
     background: transparent !important;
@@ -1220,38 +1282,42 @@ select {
   .signature-clear {
     display: none !important;
   }
+
+
+  /* =========================================
+     جلوگیری از تغییر جدول‌ها
+     ========================================= */
+
+  .expense-table,
+  .ni-table {
+    border-collapse: collapse !important;
+  }
+
+  .expense-table th,
+  .expense-table td,
+  .ni-table th,
+  .ni-table td {
+    border-color: #111 !important;
+  }
+
+
+  /* =========================================
+     جلوگیری از شکست داخلی فرم
+     ========================================= */
+
+  .form-frame,
+  .main-header,
+  .expense-table,
+  .signature-row,
+  .ni-frame,
+  .ni-top,
+  .ni-info,
+  .ni-table,
+  .ni-bottom,
+  .notes {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
 }
-
-
-/* =========================================
-   اسکرول پنل
-   ========================================= */
-
-.control-panel::-webkit-scrollbar {
-  width: 8px;
-}
-
-.control-panel::-webkit-scrollbar-track {
-  background: #f1f3f5;
-  border-radius: 10px;
-}
-
-.control-panel::-webkit-scrollbar-thumb {
-  background: #cfd5dc;
-  border-radius: 10px;
-}
-
-
-/* =========================================
-   انتخاب متن
-   ========================================= */
-
-::selection {
-  background: #20252b;
-  color: #fff;
-}
-
-::-moz-selection {
-  background: #20252b;
-  color: #fff;
 }
