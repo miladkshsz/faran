@@ -84,10 +84,13 @@ const money = value => {
     : '';
 };
 
-const hasKeyword = value =>
-  KEYWORDS.some(k =>
-    String(value || '').includes(k)
+// بهبود شده: بررسی حاوی کلمات کلیدی
+const hasKeyword = value => {
+  const text = String(value || '').toLowerCase();
+  return KEYWORDS.some(k =>
+    text.includes(k)
   );
+};
 
 const chunks = (arr, size) =>
   Array.from(
@@ -559,11 +562,6 @@ function SignaturePad({
     useRef(null);
 
 
-  /*
-   * Canvas کاملاً شفاف است.
-   * اگر قبلاً امضایی ذخیره شده باشد،
-   * همان امضا دوباره روی Canvas قرار می‌گیرد.
-   */
   useEffect(() => {
     const canvas =
       canvasRef.current;
@@ -582,10 +580,6 @@ function SignaturePad({
       canvas.height
     );
 
-    /*
-     * هیچ رنگ پس‌زمینه‌ای
-     * اینجا قرار نمی‌دهیم.
-     */
     ctx.globalCompositeOperation =
       'source-over';
 
@@ -710,11 +704,6 @@ function SignaturePad({
     ctx.lineJoin = 'round';
     ctx.strokeStyle = '#000';
 
-    /*
-     * فقط خود خط امضا
-     * روی Canvas نوشته می‌شود.
-     * هیچ Background وجود ندارد.
-     */
     ctx.stroke();
 
     lastPointRef.current =
@@ -742,10 +731,6 @@ function SignaturePad({
 
       if (!canvas) return;
 
-      /*
-       * خروجی PNG دارای
-       * پس‌زمینه شفاف است.
-       */
       const signature =
         canvas.toDataURL(
           'image/png'
@@ -870,16 +855,6 @@ function App() {
     });
 
 
-  /*
-   * requester:
-   * امضای تنظیم کننده
-   *
-   * confirmer:
-   * نام/امضای تایید کننده
-   *
-   * issuer:
-   * نام/امضای تصویب کننده
-   */
   const [sig, setSig] =
     useState({
       requester: '',
@@ -907,20 +882,18 @@ function App() {
   );
 
 
-  /*
-   * انتقال خودکار هزینه‌های
-   * بدون فاکتور
-   */
+  /* بهبود شده: فیلتر دقیق‌تر برای فرم بدون فاکتور */
   const niItems = useMemo(
     () =>
       rows
         .filter(
-          row =>
-            hasKeyword(
-              row.description
-            ) &&
-            toNum(row.amount) >
-              0
+          row => {
+            const hasAmount = toNum(row.amount) > 0;
+            const hasDescription = String(row.description || '').trim().length > 0;
+            const matchesKeyword = hasKeyword(row.description);
+            
+            return hasAmount && hasDescription && matchesKeyword;
+          }
         )
         .map(row => ({
           product:
@@ -1488,15 +1461,6 @@ function App() {
                     امضاء درخواست کننده :
                   </span>
 
-
-                  {/*
-                   * اینجا همان امضای تنظیم کننده
-                   * مستقیماً کپی می‌شود.
-                   *
-                   * sig.requester همان PNG
-                   * شفاف امضای کشیده شده است.
-                   */}
-
                   {sig.requester ? (
                     <img
                       src={
@@ -1742,7 +1706,18 @@ function App() {
                     {i + 1}
                   </b>
 
-
+                  <JalaliDate
+                    value={
+                      row.date
+                    }
+                    onChange={v =>
+                      updateRow(
+                        i,
+                        'date',
+                        v
+                      )
+                    }
+                  />
 
                   <input
                     placeholder="محل مراجعه (بانک / شرکت)"
@@ -1806,7 +1781,7 @@ function App() {
 
                   <input
                     className="description-input"
-                    placeholder="شرح هزینه"
+                    placeholder="شرح هزینه (مثلاً: تاکسی، ناهار، هتل)"
                     value={
                       row.description
                     }
@@ -2018,7 +1993,7 @@ function App() {
 
 
           <div className="helper">
-            شرح‌هایی که شامل تاکسی، بلیط، ناهار، هتل، سوخت و موارد تعریف‌شده باشند، با مبلغ به فرم بدون فاکتور منتقل می‌شوند. هر فرم ۳ ردیف دارد.
+            ✅ شرح‌هایی که حاوی: تاکسی، بلیط، ناهار، هتل، سوخت، پارکینگ، صبحانه، شام، اقامت، مترو، اتوبوس، پذیرایی، اسنپ یا تپسی باشند، خودکار به فرم بدون فاکتور منتقل می‌شوند.
           </div>
 
         </section>
@@ -2144,7 +2119,7 @@ function App() {
           >
             {niBusy
               ? 'در حال ساخت…'
-              : '📄 PDF بدون فاکتور'}
+              : `📄 PDF بدون فاکتور${niPages.length > 0 ? ` (${niPages.length})` : ''}`}
           </button>
 
 
@@ -2415,7 +2390,7 @@ function App() {
           <>
 
             <div className="preview-note no-print">
-              پیش‌نمایش فرم‌های هزینه بدون فاکتور
+              پیش‌نمایش فرم‌های هزینه بدون فاکتور ({niPages.length} صفحه)
             </div>
 
             <div className="no-invoice-pages">
