@@ -14,10 +14,13 @@ body,
 #root {
   min-height: 100%;
   margin: 0;
+  padding: 0;
 }
 
 body {
   background: #e9edf2;
+  margin: 0;
+  padding: 0;
 }
 
 button,
@@ -505,7 +508,7 @@ select {
 }
 
 .expense-table th {
-  height: 7%;
+  height: 11%;
   background: #f7f7f7;
   line-height: 1.25;
 }
@@ -827,27 +830,17 @@ select {
    امضای درخواست کننده در فرم بدون فاکتور
    ========================================= */
 
-/*
-   مهم:
-   هیچ background سفید یا رنگی روی تصویر امضا
-   اعمال نمی‌شود تا فقط خود خطوط امضا دیده شوند.
-*/
-
 .ni-signature-line {
   position: absolute;
   bottom: 7px;
   right: 6px;
   left: 6px;
-
   min-height: 48px;
-
   display: flex;
   align-items: center;
   gap: 6px;
-
   border-top: 1px dotted #222;
   padding-top: 4px;
-
   overflow: hidden;
 }
 
@@ -858,33 +851,16 @@ select {
 
 .ni-signature-image {
   display: block;
-
   width: 125px;
   height: 42px;
-
   max-width: 125px;
   max-height: 42px;
-
   object-fit: contain;
-
-  /*
-     پس‌زمینه کاملاً شفاف
-  */
   background: transparent !important;
-
-  /*
-     جلوگیری از هرگونه فیلتر یا افکت
-  */
   filter: none !important;
-
-  /*
-     فقط خود تصویر PNG امضا نمایش داده می‌شود
-  */
   mix-blend-mode: normal;
-
   border: 0 !important;
   outline: 0 !important;
-
   vertical-align: middle;
 }
 
@@ -908,34 +884,19 @@ select {
   position: relative;
   width: 100%;
   min-height: 90px;
-
-  /*
-     پس‌زمینه بوم امضا شفاف است
-  */
   background: transparent !important;
-
   border: 0;
 }
 
 .signature-pad {
   display: block;
-
   width: 100%;
   height: 90px;
-
-  /*
-     بسیار مهم:
-     Canvas شفاف است
-  */
   background: transparent !important;
-
   border: 1px solid #777;
   border-radius: 5px;
-
   box-sizing: border-box;
-
   cursor: crosshair;
-
   touch-action: none;
 }
 
@@ -948,19 +909,12 @@ select {
   position: absolute;
   left: 5px;
   bottom: 5px;
-
   border: 0;
-
   background: rgba(255, 255, 255, 0.9);
-
   color: #555;
-
   font-size: 10px;
-
   padding: 2px 6px;
-
   cursor: pointer;
-
   border-radius: 3px;
 }
 
@@ -977,382 +931,206 @@ select {
   display: flex;
   align-items: center;
   justify-content: center;
-
   height: 48px;
   min-height: 48px;
-
   overflow: hidden;
-
-  /*
-     محیط امضا شفاف
-  */
   background: transparent !important;
 }
 
 .signature-display img {
   display: block;
-
   width: 150px;
-
   height: auto;
-
   max-width: 150px;
   max-height: 48px;
-
   object-fit: contain;
-
-  /*
-     پس‌زمینه تصویر شفاف
-  */
-  background: transparent !important;
-
-  border: 0 !important;
-  outline: 0 !important;
-
-  filter: none !important;
 }
 
 
 /* =========================================
-   کنترل‌های امضا - سه ستون
-   ========================================= */
-
-.control-grid.three .signature-control {
-  min-width: 0;
-}
-
-
-/* =========================================
-   چک‌باکس تایید
-   ========================================= */
-
-.checks {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-top: 18px;
-  white-space: nowrap;
-}
-
-
-/* =========================================
-   توضیحات
-   ========================================= */
-
-.notes {
-  height: 10%;
-  border-top: 1px solid #111;
-  padding: 5px 7px;
-  font-size: 8.5px;
-  overflow: hidden;
-}
-
-
-/* =========================================
-   صفحات بدون فاکتور
-   ========================================= */
-
-.no-invoice-pages {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  width: min(100%, 820px);
-}
-
-
-/* =========================================
-   ریسپانسیو
-   ========================================= */
-
-@media (max-width: 1100px) {
-
-  .app-shell {
-    flex-direction: column;
-    padding: 10px;
-  }
-
-  .control-panel {
-    width: 100%;
-    flex-basis: auto;
-    position: relative;
-    top: auto;
-    max-height: none;
-  }
-
-  .preview-area {
-    width: 100%;
-  }
-}
-
-
-@media (max-width: 650px) {
-
-  .control-grid,
-  .control-grid.three {
-    grid-template-columns: 1fr;
-  }
-
-  .action-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .main-paper {
-    min-width: 760px;
-  }
-
-  .no-invoice-paper {
-    min-width: 650px;
-  }
-
-  .preview-area {
-    overflow-x: auto;
-    align-items: flex-start;
-  }
-
-  .preview-note {
-    align-self: flex-start;
-  }
-
-  .control-panel {
-    width: 100%;
-  }
-
-  .jalali-calendar {
-    width: 270px;
-    right: 0;
-  }
-}
-
-
-/* =========================================
-   چاپ
-   ========================================= */
-
-/* =========================================
-   چاپ دقیق فرم‌ها
+   استایل‌های پرینت - بهبود شده
    ========================================= */
 
 @media print {
-
-  /* ---------- تنظیمات عمومی ---------- */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    -webkit-filter: none !important;
+    filter: none !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
 
   html,
   body,
   #root {
-    width: 100%;
-    min-height: 100%;
     margin: 0 !important;
     padding: 0 !important;
-    background: #fff !important;
-  }
-
-  .no-print,
-  .control-panel,
-  .preview-note {
-    display: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: white !important;
+    min-height: auto;
   }
 
   .app-shell {
     display: block !important;
-    width: 100% !important;
-    min-height: 0 !important;
+    gap: 0 !important;
     padding: 0 !important;
     margin: 0 !important;
+    background: white !important;
+    flex-direction: column;
   }
 
-  .preview-area {
-    display: block !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .paper {
-    box-shadow: none !important;
-    border: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-  }
-
-
-  /* =========================================
-     فرم اصلی
-     A4 افقی
-     ========================================= */
-
-  .main-paper {
-    width: 297mm !important;
-    height: 210mm !important;
-
-    min-width: 297mm !important;
-    max-width: 297mm !important;
-
-    min-height: 210mm !important;
-    max-height: 210mm !important;
-
-    aspect-ratio: auto !important;
-
-    page-break-before: auto !important;
-    page-break-after: always !important;
-    break-before: auto !important;
-    break-after: page !important;
-
-    margin: 0 !important;
-    padding: 6.2% 6% !important;
-  }
-
-
-  /* =========================================
-     فرم‌های بدون فاکتور
-     A4 عمودی
-     ========================================= */
-
-  .no-invoice-pages {
-    display: block !important;
-    width: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-  .no-invoice-paper {
-    width: 210mm !important;
-    height: 297mm !important;
-
-    min-width: 210mm !important;
-    max-width: 210mm !important;
-
-    min-height: 297mm !important;
-    max-height: 297mm !important;
-
-    aspect-ratio: auto !important;
-
-    page-break-before: auto !important;
-    page-break-after: always !important;
-    break-before: auto !important;
-    break-after: page !important;
-
-    margin: 0 !important;
-    padding: 0 !important;
-  }
-
-
-  /* =========================================
-     قاب فرم بدون فاکتور
-     ========================================= */
-
-  .ni-frame {
-    position: absolute !important;
-
-    width: 86% !important;
-    height: 88% !important;
-
-    left: 7% !important;
-    top: 6% !important;
-
-    margin: 0 !important;
-  }
-
-
-  /* =========================================
-     جلوگیری از تغییر امضا در چاپ
-     ========================================= */
-
-  .signature-pad-wrap {
-    background: transparent !important;
-  }
-
-  .signature-pad {
-    background: transparent !important;
-  }
-
-  .signature-display,
-  .ni-signature-line {
-    background: transparent !important;
-  }
-
-  .signature-display img,
-  .ni-signature-image {
-    background: transparent !important;
-    border: 0 !important;
-    outline: 0 !important;
-    filter: none !important;
-  }
-
-  .signature-clear {
+  /* مخفی کردن تمام عناصر غیرضروری */
+  .control-panel,
+  .preview-note,
+  .no-print,
+  .control-panel section,
+  aside {
     display: none !important;
   }
 
+  .preview-area {
+    gap: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    flex-direction: column;
+  }
 
-  /* =========================================
-     جلوگیری از تغییر جدول‌ها
-     ========================================= */
+  /* استایل صفحات چاپی */
+  .paper {
+    page-break-after: always;
+    box-shadow: none !important;
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    overflow: visible;
+    position: relative;
+  }
 
+  .main-paper {
+    aspect-ratio: auto !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    break-after: page;
+    page-break-after: always;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .no-invoice-paper {
+    aspect-ratio: auto !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    break-after: page;
+    page-break-after: always;
+    box-sizing: border-box;
+  }
+
+  .form-frame,
+  .ni-frame {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: relative !important;
+    left: 0 !important;
+    top: 0 !important;
+  }
+
+  /* جلوگیری از شکستن عناصر مهم */
+  .main-header,
   .expense-table,
-  .ni-table {
-    border-collapse: collapse !important;
+  .signature-row,
+  .ni-top,
+  .ni-info,
+  .ni-table,
+  .ni-bottom {
+    page-break-inside: avoid !important;
+  }
+
+  table {
+    page-break-inside: avoid !important;
+    width: 100% !important;
+  }
+
+  thead {
+    display: table-header-group;
+  }
+
+  tfoot {
+    display: table-footer-group;
+  }
+
+  tr {
+    page-break-inside: avoid !important;
+    page-break-after: auto;
+  }
+
+  td,
+  th {
+    page-break-inside: avoid !important;
+  }
+
+  /* حفظ رنگ‌های تعریف شده */
+  .expense-table th,
+  .ni-table th {
+    background: #f7f7f7 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .expense-table .total-row td,
+  .ni-table .ni-total td {
+    background: #fafafa !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* امضاها در پرینت */
+  .ni-signature-image {
+    display: block !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  .signature-display img {
+    display: block !important;
+    -webkit-print-color-adjust: exact !important;
+  }
+
+  /* حاشیه صفحه */
+  @page {
+    size: A4;
+    margin: 0;
+    padding: 0;
+  }
+
+  @page :first {
+    margin: 0;
+  }
+
+  /* خطوط و حدود */
+  .expense-table,
+  .ni-table,
+  .main-header,
+  .signature-row {
+    border: 1px solid #111 !important;
   }
 
   .expense-table th,
   .expense-table td,
   .ni-table th,
   .ni-table td {
-    border-color: #111 !important;
+    border: 1px solid #111 !important;
   }
-
-
-  /* =========================================
-     جلوگیری از شکست داخلی فرم
-     ========================================= */
-
-  .form-frame,
-  .main-header,
-  .expense-table,
-  .signature-row,
-  .ni-frame,
-  .ni-top,
-  .ni-info,
-  .ni-table,
-  .ni-bottom,
-  .notes {
-    break-inside: avoid !important;
-    page-break-inside: avoid !important;
-  }
-
 }
 
-
-
-
-/* =========================================
-   اسکرول پنل
-   ========================================= */
-
-.control-panel::-webkit-scrollbar {
-  width: 8px;
-}
-
-.control-panel::-webkit-scrollbar-track {
-  background: #f1f3f5;
-  border-radius: 10px;
-}
-
-.control-panel::-webkit-scrollbar-thumb {
-  background: #cfd5dc;
-  border-radius: 10px;
-}
-
-
-/* =========================================
-   انتخاب متن
-   ========================================= */
-
-::selection {
-  background: #20252b;
-  color: #fff;
-}
-
-::-moz-selection {
-  background: #20252b;
-  color: #fff;
+@page {
+  size: A4;
+  margin: 0;
+  padding: 0;
 }
