@@ -1742,18 +1742,7 @@ function App() {
                     {i + 1}
                   </b>
 
-                  <JalaliDate
-                    value={
-                      row.date
-                    }
-                    onChange={v =>
-                      updateRow(
-                        i,
-                        'date',
-                        v
-                      )
-                    }
-                  />
+
 
                   <input
                     placeholder="محل مراجعه (بانک / شرکت)"
