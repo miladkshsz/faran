@@ -129,7 +129,6 @@ function NoInvoicePrintPage({ items, index, ni, signature }) {
   return <section id={`ni-${index}`} className="print-page print-no-invoice-page" dir="rtl">
     <div className="ni-page-a4">
       <NoInvoiceCopy items={first} ni={ni} signature={signature}/>
-      <NoInvoiceCopy items={[]} ni={ni} signature={{requester:"",confirmer:"",issuer:""}}/>
     </div>
   </section>;
 }
