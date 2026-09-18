@@ -63,9 +63,75 @@ function MainPrintPage({ header, rows, total, signatures }) {
   return <section id="main-paper" className="print-page print-main-page" dir="rtl"><div className="print-main-inner"><PrintHeader title={header.title} docCode={header.docCode} serviceCode={header.serviceCode} date={header.date}/><table className="print-main-table"><colgroup><col className="c-no"/><col className="c-date"/><col className="c-place"/><col className="c-service"/><col className="c-invoice"/><col className="c-description"/><col className="c-amount"/></colgroup><thead><tr><th>ردیف</th><th>تاریخ</th><th>محل مراجعه<br/>(بانک / شرکت)</th><th>نوع خدمات</th><th>شماره قرارداد / فاکتور</th><th>شرح هزینه</th><th>مبلغ هزینه<br/>(ریال)</th></tr></thead><tbody>{rows.map((r,i)=><tr key={i}><td>{i+1}</td><td>{header.date}</td><td>{r.place}</td><td>{r.service}</td><td>{r.invoice}</td><td className="print-description">{r.description}</td><td>{money(r.amount)}</td></tr>)}<tr className="print-total-row"><td colSpan="2">تاریخ واریزی : {header.reviewDate || "................"}</td><td colSpan="4">جمع کل هزینه :</td><td>{money(total)}</td></tr></tbody></table><div className="print-main-signatures"><div><b>نام و امضاء</b><span>تنظیم کننده :</span>{signatures.requester && <img src={signatures.requester} alt="امضاء"/>}</div><div><b>نام و امضاء</b><span>تأیید کننده :</span><strong>{signatures.confirmer}</strong></div><div><b>نام و امضاء</b><span>تصویب کننده :</span><strong>{signatures.issuer}</strong></div></div></div></section>;
 }
 
+function NoInvoiceCopy({ items, ni, signature }) {
+  const total = items.reduce((s, r) => s + toNum(r.total), 0);
+  return <div className="ni-copy" dir="rtl">
+    <div className="ni-copy-header">
+      <div className="ni-codes">
+        <div>کد فرم: <b>{ni.formCode}</b></div>
+        <div>کد سند مرجع: <b>{ni.referenceCode}</b></div>
+      </div>
+      <div className="ni-title">فرم صورت هزینه بدون فاکتور</div>
+      <div className="ni-logo"><img src={LOGO_SRC} alt="فاران"/></div>
+    </div>
+
+    <div className="ni-date-line">تاریخ: <b>{ni.date || "........ / ........ / ........"}</b></div>
+    <div className="ni-person-line">
+      <span>نام و نام خانوادگی درخواست کننده: <b>{ni.requester || ".............................................................."}</b></span>
+      <span>سمت: <b>{ni.position || "................................"}</b></span>
+      <span>واحد سازمانی: <b>{ni.organization || "..................................."}</b></span>
+    </div>
+
+    <table className="ni-table-exact">
+      <colgroup><col/><col/><col/><col/><col/><col/></colgroup>
+      <thead><tr>
+        <th>ردیف</th><th>مشخصات کالا / خدمات</th><th>آدرس ارائه دهنده کالا / خدمات</th>
+        <th>تعداد</th><th>مبلغ واحد</th><th>مبلغ کل (ریال)</th>
+      </tr></thead>
+      <tbody>
+        {items.map((r,i)=><tr key={i}>
+          <td>{i+1}</td><td>{r.product}</td><td>{r.provider}</td><td>{r.qty || "۱"}</td>
+          <td>{money(r.unit)}</td><td>{money(r.total)}</td>
+        </tr>)}
+        {Array.from({length:3-items.length},(_,i)=><tr key={"e"+i}><td>{items.length+i+1}</td><td/><td/><td/><td/><td/></tr>)}
+        <tr className="ni-total-exact"><td colSpan="5">جمع کل (ریال)</td><td>{money(total)}</td></tr>
+      </tbody>
+    </table>
+
+    <div className="ni-body-exact">
+      <div className="ni-requester-side">
+        <div className="ni-vertical">درخواست کننده</div>
+        <div className="ni-reason-exact">
+          <div className="reason-text"><b>دلیل استفاده از کالا / خدمات:</b> {ni.reason || "........................................................................................................................"}</div>
+          <div className="reason-line">....................................................................................................................................................</div>
+          <div className="ni-requester-sign">امضاء درخواست کننده{signature.requester && <img src={signature.requester} alt="امضاء"/>}</div>
+        </div>
+      </div>
+      <div className="ni-approval-main">
+        <div className="approval-title">اظهار نظر تأیید کننده:</div>
+        <div className="approval-comment">{ni.approverComment || "................................................................................................................"}</div>
+        <div className="approval-options">
+          <span>☐ موافقت نمی‌شود</span><span>☐ با صورت هزینه نامبرده موافقت می‌شود</span>
+        </div>
+      </div>
+      <div className="ni-confirm-sign">
+        <div>امضاء تأیید کننده</div>
+        {signature.confirmer && <div className="typed-sign">{signature.confirmer}</div>}
+      </div>
+    </div>
+
+    <div className="ni-notes-exact">توضیحات: {ni.notes || "............................................................................................................................................................................................"}</div>
+  </div>;
+}
+
 function NoInvoicePrintPage({ items, index, ni, signature }) {
-  const total = items.reduce((s,r)=>s+toNum(r.total),0);
-  return <section id={`ni-${index}`} className="print-page print-no-invoice-page" dir="rtl"><div className="noinvoice-sheet"><PrintHeader title="فرم صورت هزینه بدون فاکتور" docCode={ni.formCode} serviceCode={ni.referenceCode} date={ni.date} noInvoice/><div className="ni-date-row">تاریخ : <b>{ni.date || "................"}</b></div><div className="ni-request-row"><span>نام و نام خانوادگی درخواست کننده : {ni.requester || "................................................"}</span><span>واحد سازمانی : {ni.organization || "................................"}</span></div><table className="ni-reference-table"><colgroup><col/><col/><col/><col/><col/><col/></colgroup><thead><tr><th>ردیف</th><th>مشخصات کالا / خدمات</th><th>آدرس ارائه دهنده کالا / خدمات</th><th>تعداد</th><th>مبلغ واحد (ریال)</th><th>مبلغ کل (ریال)</th></tr></thead><tbody>{items.map((r,i)=><tr key={i}><td>{i+1}</td><td>{r.product}</td><td>{r.provider}</td><td>{r.qty || "۱"}</td><td>{money(r.unit)}</td><td>{money(r.total)}</td></tr>)}{Array.from({length:3-items.length},(_,i)=><tr key={`e${i}`}><td>{items.length+i+1}</td><td/><td/><td/><td/><td/></tr>)}<tr className="ni-total"><td colSpan="5">جمع کل (ریال)</td><td>{money(total)}</td></tr></tbody></table><div className="ni-lower"><div className="ni-requester-block"><div className="vertical-label">درخواست کننده</div><div className="ni-reason"><b>دلیل استفاده از کالا / خدمات :</b><div>{ni.reason || "........................................................................................................................................"}</div><div className="ni-sign"><span>امضاء درخواست کننده</span>{signature.requester && <img src={signature.requester} alt="امضاء"/>}</div></div></div><div className="ni-approver"><b>اظهار نظر تأیید کننده</b><div className="dots">{ni.approverComment || "................................................................................................................"}</div><div className="checks"><span>□ موافقت می‌شود</span><span>□ موافقت نمی‌شود</span></div><div className="ni-sign-text">امضاء تأیید کننده : {signature.confirmer}</div></div><div className="ni-issuer"><b>امضاء تأیید کننده</b><div className="ni-sign-text">نام و امضاء<br/><br/>{signature.issuer}</div></div></div><div className="ni-notes">توضیحات : {ni.notes || "........................................................................................................................................................................"}</div></div></section>;
+  const first = items.slice(0, 3);
+  return <section id={`ni-${index}`} className="print-page print-no-invoice-page" dir="rtl">
+    <div className="ni-page-a4">
+      <NoInvoiceCopy items={first} ni={ni} signature={signature}/>
+      <NoInvoiceCopy items={[]} ni={ni} signature={{requester:"",confirmer:"",issuer:""}}/>
+    </div>
+  </section>;
 }
 
 async function makePageCanvas(el) { return html2canvas(el,{scale:3,backgroundColor:"#fff",useCORS:true,allowTaint:false,logging:false}); }
